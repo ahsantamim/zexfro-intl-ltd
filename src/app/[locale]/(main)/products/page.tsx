@@ -44,6 +44,7 @@ export default function ProductsPage() {
               activeTab={activeTab}
               searchQuery={searchQuery}
               selectedCategory={selectedCategory}
+              categorySlug={selectedCategory}
             />
           </div>
         </div>
