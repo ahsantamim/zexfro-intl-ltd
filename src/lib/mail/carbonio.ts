@@ -1,25 +1,24 @@
 // Carbonio Mail Integration
 // Documentation: https://docs.zextras.com/carbonio-ce/
 
-interface MailConfig {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  secure: boolean;
-}
+import nodemailer from "nodemailer";
 
-const mailConfig: MailConfig = {
-  host: process.env.CARBONIO_HOST || "localhost",
-  port: parseInt(process.env.CARBONIO_PORT || "25"),
-  username: process.env.CARBONIO_USERNAME || "",
-  password: process.env.CARBONIO_PASSWORD || "",
-  secure: process.env.CARBONIO_SECURE === "true",
+const mailConfig = {
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || "587"),
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
+  },
+  secure: false,
 };
+
+const FROM = process.env.SMTP_FROM || process.env.SMTP_USER;
+const ADMIN_EMAIL = "info@zexfrointl.com";
 
 export async function sendWelcomeEmail(
   to: string,
-  name: string
+  name: string,
 ): Promise<void> {
   // Implement Carbonio mail sending
   // You'll need to install nodemailer or similar package
@@ -40,18 +39,33 @@ export async function sendContactEmail(data: {
   email: string;
   subject: string;
   message: string;
+  inquiryType?: string;
 }): Promise<void> {
-  // Implement contact email sending via Carbonio
-  console.log(`Sending contact email from ${data.email}`);
-
-  // Example implementation:
-  // const transporter = nodemailer.createTransport(mailConfig);
-  // await transporter.sendMail({
-  //   from: data.email,
-  //   to: process.env.CONTACT_EMAIL,
-  //   subject: `Contact Form: ${data.subject}`,
-  //   html: `<p><strong>From:</strong> ${data.name} (${data.email})</p><p>${data.message}</p>`
-  // });
+  const transporter = nodemailer.createTransport(mailConfig);
+  const inquiryLabel =
+    data.inquiryType === "quotation" ? "Quotation" : "General Info";
+  const html = `
+    <p><strong>Inquiry Type:</strong> ${inquiryLabel}</p>
+    <p><strong>From:</strong> ${data.name} (${data.email})</p>
+    <p><strong>Subject:</strong> ${data.subject}</p>
+    <p><strong>Message:</strong></p>
+    <p>${data.message}</p>
+  `;
+  // Send to admin
+  await transporter.sendMail({
+    from: FROM,
+    to: ADMIN_EMAIL,
+    subject: `Contact Form: ${data.subject}`,
+    html,
+    replyTo: data.email,
+  });
+  // Send confirmation to user
+  await transporter.sendMail({
+    from: FROM,
+    to: data.email,
+    subject: "We received your message - Zexfro International Ltd.",
+    html: `<p>Dear ${data.name},</p><p>Thank you for contacting us. We have received your message and will get back to you soon.</p><hr>${html}`,
+  });
 }
 
 export async function getMailStats() {

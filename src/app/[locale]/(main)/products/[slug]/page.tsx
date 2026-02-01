@@ -79,7 +79,7 @@ export default function ProductPage() {
           // Set initial selected image to primary or first image
           const primaryImage =
             data.data.product_images?.find(
-              (img: ProductImage) => img.is_primary
+              (img: ProductImage) => img.is_primary,
             ) || data.data.product_images?.[0];
           console.log("Selected image:", primaryImage);
           setSelectedImage(primaryImage || null);
@@ -129,7 +129,7 @@ export default function ProductPage() {
   const sanitizedHtml = DOMPurify.sanitize(product.long_description || "");
 
   return (
-    <main className="min-h-screen bg-white pt-16 md:pt-20">
+    <main className="min-h-screen bg-white pt-16 md:pt-20 overflow-x-hidden">
       {/* Breadcrumb Navigation */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="container mx-auto px-4 py-4 max-w-7xl">
@@ -158,7 +158,7 @@ export default function ProductPage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
+      <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl overflow-x-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 md:mb-16">
           {/* Image Gallery Section */}
           <div className="flex flex-col space-y-4">
@@ -281,8 +281,8 @@ export default function ProductPage() {
                         type.slug === "import"
                           ? "bg-blue-100 text-blue-700 border border-blue-200"
                           : type.slug === "export"
-                          ? "bg-green-100 text-green-700 border border-green-200"
-                          : "bg-gray-100 text-gray-700 border border-gray-200"
+                            ? "bg-green-100 text-green-700 border border-green-200"
+                            : "bg-gray-100 text-gray-700 border border-gray-200"
                       }`}
                     >
                       {type.name}
@@ -294,12 +294,18 @@ export default function ProductPage() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6 md:mb-8">
-              <button className="flex-1 bg-[#1800ad] text-white px-6 py-3.5 rounded-lg font-semibold hover:bg-[#1200a0] transition-all shadow-md hover:shadow-lg">
+              <Link
+                href="/contact"
+                className="flex-1 bg-[#1800ad] text-white px-6 py-3.5 rounded-lg font-semibold hover:bg-[#1200a0] transition-all shadow-md hover:shadow-lg flex items-center justify-center text-center"
+              >
                 Request Quote
-              </button>
-              <button className="flex-1 bg-white border-2 border-[#1800ad] text-[#1800ad] px-6 py-3.5 rounded-lg font-semibold hover:bg-[#1800ad] hover:text-white transition-all">
+              </Link>
+              <Link
+                href="/contact"
+                className="flex-1 bg-white border-2 border-[#1800ad] text-[#1800ad] px-6 py-3.5 rounded-lg font-semibold hover:bg-[#1800ad] hover:text-white transition-all flex items-center justify-center text-center"
+              >
                 Contact Seller
-              </button>
+              </Link>
               <button
                 onClick={() => setLiked(!liked)}
                 className="sm:flex-none bg-white border-2 border-gray-300 text-gray-700 p-3.5 rounded-lg hover:border-red-500 hover:text-red-500 transition-all"
@@ -323,9 +329,33 @@ export default function ProductPage() {
               Product Description
             </h2>
             <div
-              className="prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed"
+              className="prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed overflow-x-auto break-words"
               dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+              style={{
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+                hyphens: "auto",
+              }}
             />
+            <style jsx>{`
+              div :global(img) {
+                max-width: 100% !important;
+                height: auto !important;
+              }
+              div :global(table) {
+                width: 100% !important;
+                table-layout: fixed !important;
+                word-wrap: break-word !important;
+              }
+              div :global(pre) {
+                overflow-x: auto !important;
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+              }
+              div :global(*) {
+                max-width: 100% !important;
+              }
+            `}</style>
           </div>
         )}
 

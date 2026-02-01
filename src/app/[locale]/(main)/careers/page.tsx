@@ -335,8 +335,8 @@ export default function CareersPage() {
               key={index}
               className="bg-white border border-gray-200 rounded-lg p-8 hover:border-[#0a4a9e] hover:shadow-xl transition-all duration-300 group"
             >
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                <div className="flex-1">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div className="lg:col-span-3">
                   <div className="flex flex-wrap items-center gap-3 mb-4">
                     <h3 className="text-2xl font-bold text-gray-900">
                       {position.title}
@@ -383,11 +383,30 @@ export default function CareersPage() {
                   </div>
                 </div>
 
-                <div className="lg:w-48 flex-shrink-0">
+                <div className="lg:col-span-1 flex items-stretch">
+                  {/*
                   <button className="w-full group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#0a4a9e] to-[#05306b] hover:from-[#0d5bbf] hover:to-[#0a4a9e] text-white font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                     Apply Now
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                   </button>
+                  */}
+                  <div className="w-full h-full bg-gradient-to-r from-[#0a4a9e] to-[#05306b] text-white font-semibold px-5 py-4 rounded-lg shadow-md text-left flex flex-col justify-center">
+                    <div className="mb-3">
+                      Apply at{" "}
+                      <a
+                        href={`mailto:info@zexfrointl.com?subject=Application%20for%20${encodeURIComponent(position.title)}`}
+                        className="bg-pink-500 hover:bg-pink-600 mt-3 text-white px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200"
+                      >
+                        info@zexfrointl.com
+                      </a>
+                    </div>
+                    <div className="text-sm font-normal mt-3">
+                      Subject: <b>Application for {position.title}</b>
+                    </div>
+                    <div className="text-sm mt-3 font-normal">
+                      Attach your cover letter and resume (PDF)
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -403,10 +422,10 @@ export default function CareersPage() {
             We're always looking for talented individuals to join our team. Send
             us your resume and we'll keep you in mind for future opportunities.
           </p>
-          <button className="inline-flex items-center gap-2 bg-[#0a4a9e] hover:bg-[#05306b] text-white font-bold px-8 py-3 rounded-full transition-all duration-300">
+          {/* <button className="inline-flex items-center gap-2 bg-[#0a4a9e] hover:bg-[#05306b] text-white font-bold px-8 py-3 rounded-full transition-all duration-300">
             Send Your Resume
             <ArrowRight className="w-5 h-5" />
-          </button>
+          </button> */}
         </div>
       </ContentSection>
 

@@ -202,9 +202,14 @@ export function Navbar() {
                   : servicesDropdownRef;
 
                 return (
-                  <div key={link.key} className="relative" ref={dropdownRef}>
+                  <div
+                    key={link.key}
+                    className="relative"
+                    ref={dropdownRef}
+                    onMouseEnter={() => setDropdownOpen(true)}
+                    onMouseLeave={() => setDropdownOpen(false)}
+                  >
                     <button
-                      onMouseEnter={() => setDropdownOpen(true)}
                       onClick={() => setDropdownOpen(!dropdownOpen)}
                       className="px-4 lg:px-5 py-2 text-base lg:text-lg font-semibold text-white hover:bg-white/20 transition-colors duration-200 rounded-md flex items-center gap-1"
                     >
@@ -218,10 +223,7 @@ export function Navbar() {
 
                     {/* Dropdown Menu */}
                     {dropdownOpen && (
-                      <div
-                        onMouseLeave={() => setDropdownOpen(false)}
-                        className="absolute top-full left-0 w-64 bg-[#1800ad] shadow-xl py-2 animate-in fade-in slide-in-from-top-2 duration-200"
-                      >
+                      <div className="absolute top-full left-0 w-64 bg-[#1800ad] shadow-xl py-2 animate-in fade-in slide-in-from-top-2 duration-200">
                         {link.dropdownItems?.map((item) => (
                           <Link
                             key={item.href}
