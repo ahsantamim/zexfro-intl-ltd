@@ -119,9 +119,9 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             {/* Announcement Badge - Mobile */}
             <AnnouncementBadge
-              text="New"
+              text="Announcement"
               icon="sparkles"
-              link="/blog"
+              link="/announcementpdf.pdf"
               announcements={["Announcement !"]}
             />
 
@@ -179,9 +179,9 @@ export function Navbar() {
             {/* Announcement Badge - Desktop */}
             <div className="mr-2">
               <AnnouncementBadge
-                text="What's New"
+                text="Announcement"
                 icon="sparkles"
-                link="/blog"
+                link="/announcementpdf.pdf"
                 announcements={["Announcement !"]}
               />
             </div>

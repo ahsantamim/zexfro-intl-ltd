@@ -1,71 +1,66 @@
 "use client";
 
-import { 
-  ContentLayout, 
-  ContentSection, 
+import {
+  ContentLayout,
+  ContentSection,
   SectionHeader,
-  CTABox 
+  CTABox,
 } from "@/components/ui/ContentLayout";
-import { 
-  Users,
-  Mail,
-  Linkedin,
-  Award
-} from "lucide-react";
+import { Users, Mail, Linkedin, Award } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 export default function BoardOfDirectorsPage() {
   const t = useTranslations("boardOfDirectors");
-  
+
   const directors = [
     {
-      name: "John Anderson",
-      position: "Chairman & CEO",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
-      bio: "With over 25 years of experience in international trade, John leads Zexfro's strategic vision and global expansion initiatives.",
-      linkedin: "#",
-      email: "j.anderson@zexfro.com"
+      name: "Khazi Sirajul Islam",
+      position: "Acting Chairman",
+      image: "/Directores/Khazi Sirajul Islam Acting Chairman.jpeg",
+      bio: "Khazi Sirajul Islam provides strategic leadership and oversees board activities as Acting Chairman.",
     },
     {
-      name: "Sarah Chen",
+      name: "Jesmin Akter",
+      position: "Vice Chairman",
+      image: "/Directores/Jesmin Akter Vice Chariman.jpeg",
+      bio: "Jesmin Akter supports the board and company operations as Vice Chairman.",
+    },
+    {
+      name: "Md. Shameem Ahmed",
       position: "Managing Director",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80",
-      bio: "Sarah brings 20 years of expertise in supply chain management and has been instrumental in building Zexfro's global network.",
-      linkedin: "#",
-      email: "s.chen@zexfro.com"
+      image: "/Directores/Md. Shameem Ahmed Managing Director.jpeg",
+      bio: "Md. Shameem Ahmed manages daily operations and drives company growth as Managing Director.",
     },
     {
-      name: "Michael Rodriguez",
-      position: "Director of Operations",
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80",
-      bio: "Michael oversees all operational aspects, ensuring efficiency and compliance across all Zexfro's trade activities.",
-      linkedin: "#",
-      email: "m.rodriguez@zexfro.com"
+      name: "Nashir Hussein",
+      position: "General Manager",
+      image: "/Directores/Nashir Hussein General Manager.jpeg",
+      bio: "Nashir Hussein ensures smooth business operations as General Manager.",
     },
     {
-      name: "Dr. Fatima Hassan",
-      position: "Director of Compliance",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80",
-      bio: "Dr. Hassan ensures Zexfro maintains the highest standards of regulatory compliance and ethical business practices.",
-      linkedin: "#",
-      email: "f.hassan@zexfro.com"
+      name: "Najmul Hasan",
+      position: "Logistic Coordinator",
+      image: "/Directores/Najmul Hasan Logistic Coordinator.jpeg",
+      bio: "Najmul Hasan coordinates logistics and supply chain activities.",
     },
     {
-      name: "David Thompson",
-      position: "Director of Business Development",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80",
-      bio: "David drives growth strategies and partnerships, expanding Zexfro's presence in emerging markets worldwide.",
-      linkedin: "#",
-      email: "d.thompson@zexfro.com"
+      name: "Md. Morshed Kamal",
+      position: "Local Distributor",
+      image: "/Directores/Md. Morshed Kamal Local distributor.jpeg",
+      bio: "Md. Morshed Kamal manages local distribution channels.",
     },
     {
-      name: "Lisa Wang",
-      position: "Director of Finance",
-      image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&q=80",
-      bio: "Lisa manages financial planning and risk management, ensuring sustainable growth and fiscal responsibility.",
-      linkedin: "#",
-      email: "l.wang@zexfro.com"
+      name: "Rofiq Bapary",
+      position: "Warehouse & Inventory Manager",
+      image: "/Directores/Rofiq Bapary Warehouse & Inventory Manager.jpeg",
+      bio: "Rofiq Bapary oversees warehouse and inventory management.",
+    },
+    {
+      name: "Arman Kosro",
+      position: "Head of Sales Representatives",
+      image: "/Directores/Arman Kosro Head of Sales Representatives.jpeg",
+      bio: "Arman Kosro leads the sales team and drives revenue growth.",
     },
   ];
 
@@ -97,48 +92,52 @@ export default function BoardOfDirectorsPage() {
           subtitle={t("directors.subtitle")}
           centered
         />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
           {directors.map((director) => (
             <div
               key={director.name}
-              className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 mx-auto w-full max-w-[250px]"
             >
               <div className="relative h-64">
                 <Image
                   src={director.image}
                   alt={director.name}
                   fill
-                  className="object-cover"
+                  className="object-fit-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="text-xl font-bold text-white mb-1">{director.name}</h3>
+                  <h3 className="text-xl font-bold text-white mb-1">
+                    {director.name}
+                  </h3>
                   <p className="text-sm text-white/90">{director.position}</p>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">
                   {director.bio}
                 </p>
-                
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
+                {/* <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
                   <a
                     href={`mailto:${director.email}`}
                     className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#0a4a9e] transition-colors"
                   >
                     <Mail className="w-4 h-4" />
-                    <span className="hidden lg:inline">{t("directors.email")}</span>
+                    <span className="hidden lg:inline">
+                      {t("directors.email")}
+                    </span>
                   </a>
                   <a
                     href={director.linkedin}
                     className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#0a4a9e] transition-colors"
                   >
                     <Linkedin className="w-4 h-4" />
-                    <span className="hidden lg:inline">{t("directors.linkedin")}</span>
+                    <span className="hidden lg:inline">
+                      {t("directors.linkedin")}
+                    </span>
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
@@ -161,12 +160,14 @@ export default function BoardOfDirectorsPage() {
                 {t("governance.boardResponsibilities.title")}
               </h3>
               <ul className="space-y-3 text-gray-700">
-                {t.raw("governance.boardResponsibilities.items").map((item: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-blue-600 font-bold">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
+                {t
+                  .raw("governance.boardResponsibilities.items")
+                  .map((item: string, index: number) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-blue-600 font-bold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
               </ul>
             </div>
 
@@ -175,17 +176,19 @@ export default function BoardOfDirectorsPage() {
                 {t("governance.meetingSchedule.title")}
               </h3>
               <ul className="space-y-3 text-gray-700">
-                {t.raw("governance.meetingSchedule.items").map((item: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-green-600 font-bold">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
+                {t
+                  .raw("governance.meetingSchedule.items")
+                  .map((item: string, index: number) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>
 
-          <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-lg p-8">
+          <div className="mt-8 bg-linear-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-lg p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
               {t("governance.commitment.title")}
             </h3>
