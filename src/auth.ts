@@ -65,7 +65,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           } catch (dbError) {
             console.warn(
               "Database connection failed, using fallback only:",
-              dbError
+              dbError,
             );
             // Continue with fallback user only
           }
@@ -77,7 +77,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           // Compare password with hashed password in database
           const passwordMatch = await bcrypt.compare(
             credentials.password as string,
-            user.password
+            user.password,
           );
 
           if (!passwordMatch) {

@@ -112,6 +112,7 @@ export default function LoginPage() {
             </button>
           </form>
 
+          {/*
           <div className="mt-6 pt-6 border-t border-gray-200">
             <div className="text-sm text-gray-600 text-center">
               <p className="font-medium mb-2">Demo Credentials:</p>
@@ -119,6 +120,7 @@ export default function LoginPage() {
               <p>Password: <span className="font-mono bg-gray-100 px-2 py-1 rounded">zexfro12341234</span></p>
             </div>
           </div>
+          */}
         </div>
       </div>
     </div>
