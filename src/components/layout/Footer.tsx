@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Mail, Phone, MapPin, Facebook, Linkedin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWeixin } from "@fortawesome/free-brands-svg-icons";
+import { faTelegram, faWeixin } from "@fortawesome/free-brands-svg-icons";
 import { useState } from "react";
 
 export function Footer() {
@@ -90,7 +90,7 @@ export function Footer() {
               {/* Social Icons */}
               <div className="flex gap-4 justify-center mt-6">
                 <a
-                  href="https://www.facebook.com/profile.php?id=61580928983797"
+                  href="https://www.facebook.com/profile.php?id=61575348645915&rdid=ZGkWTYmU4lIrbage#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white bg-blue-600 p-2 rounded-full hover:opacity-80 transition-opacity"
@@ -117,6 +117,18 @@ export function Footer() {
                   aria-label="WeChat"
                 >
                   <FontAwesomeIcon icon={faWeixin} className="text-xl mt-1" />
+                </a>
+                <a
+                  href="https://t.me/zexfro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white bg-[#229ED9] p-1 rounded-full hover:opacity-80 transition-opacity"
+                  aria-label="Telegram"
+                >
+                  <FontAwesomeIcon
+                    icon={faTelegram}
+                    className="text-xl mt-1 text-white"
+                  />
                 </a>
               </div>
             </div>

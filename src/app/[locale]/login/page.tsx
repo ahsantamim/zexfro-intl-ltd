@@ -45,9 +45,7 @@ export default function LoginPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Admin Login
             </h1>
-            <p className="text-gray-600">
-              Sign in to access the admin portal
-            </p>
+            <p className="text-gray-600">Sign in to access the admin portal</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -126,4 +124,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
