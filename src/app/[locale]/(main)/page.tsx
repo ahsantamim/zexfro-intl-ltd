@@ -4,7 +4,7 @@ import { FeaturesSection } from "@/components/home/FeaturesSection";
 import { ServicesHighlightSection } from "@/components/home/ServicesHighlightSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { StatsSection } from "@/components/home/StatsSection";
-import { BlogSection } from "@/components/home/BlogSection";
+import { BlogSectionServer } from "@/components/home/BlogSectionServer";
 import { FAQSection } from "@/components/home/FAQSection";
 import { CTASection } from "@/components/home/CTASection";
 
@@ -17,7 +17,7 @@ export default function HomePage() {
       <ProductCategoriesSection />
       <TestimonialsSection />
       <StatsSection />
-      <BlogSection />
+      <BlogSectionServer />
       <FAQSection />
       <CTASection />
     </main>
