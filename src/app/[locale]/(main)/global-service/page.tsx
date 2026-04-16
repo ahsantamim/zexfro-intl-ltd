@@ -1,18 +1,31 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { generatePageSEO } from "@/lib/seo";
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "globalServicePage" });
 
-  return {
+  return generatePageSEO({
     title: t("pageTitle"),
     description: t("pageDescription"),
-  };
+    path: "/global-service",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "global trade services",
+      "international sourcing",
+      "worldwide import export",
+      "cross-border trade",
+      "global logistics",
+    ],
+  });
 }
 
 export default function GlobalServicePage() {

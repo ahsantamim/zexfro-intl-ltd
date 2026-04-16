@@ -21,6 +21,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+import { generatePageSEO } from "@/lib/seo";
+
 export async function generateMetadata({
   params,
 }: {
@@ -29,10 +31,22 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "logisticsSupport" });
 
-  return {
+  return generatePageSEO({
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+    path: "/logistics-support",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "logistics support",
+      "shipping support",
+      "freight management",
+      "cargo tracking",
+      "delivery logistics",
+      "trade logistics",
+    ],
+  });
 }
 
 export default async function LogisticsSupplyChainPage({

@@ -17,10 +17,32 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-export const metadata = {
-  title: "Case Study - Zexfro International Limited | Success Story",
-  description: "Discover how Zexfro International Limited successfully scaled its import-export operations, achieving 40% growth in distribution network and 35% export revenue contribution.",
-};
+import { generatePageSEO } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return generatePageSEO({
+    title: "Case Study - Import Export Success Story",
+    description:
+      "Discover how Zexfro International Limited successfully scaled its import-export operations, achieving 40% growth in distribution network and 35% export revenue contribution.",
+    path: "/case-study",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "trade case study",
+      "import export success",
+      "business growth story",
+      "distribution network growth",
+      "export revenue",
+      "Zexfro success",
+    ],
+  });
+}
 
 export default function CaseStudyPage() {
   return (

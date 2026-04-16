@@ -1,12 +1,32 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CreditCard, Phone, Mail, MessageSquare, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { generatePageSEO } from "@/lib/seo";
 
-export const metadata = {
-  title: "Payment Methods - Zexfro | International Trade Solutions",
-  description:
-    "Learn about Zexfro International Limited's payment methods. We currently handle all payments manually to ensure security and flexibility for your international trade transactions.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return generatePageSEO({
+    title: "Payment Methods - Secure Trade Transactions",
+    description:
+      "Learn about Zexfro International Limited's payment methods. Secure and flexible payment processing including bank transfers and manual verification for international trade transactions.",
+    path: "/payment-methods",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "trade payment methods",
+      "international payment",
+      "secure trade payment",
+      "bank transfer trade",
+      "import export payment",
+      "trade transaction security",
+    ],
+  });
+}
 
 export default function PaymentMethodsPage() {
   return (

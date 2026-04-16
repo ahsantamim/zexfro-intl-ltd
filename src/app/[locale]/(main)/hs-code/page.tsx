@@ -2,6 +2,7 @@ import { ContentLayout, ContentSection } from "@/components/ui/ContentLayout";
 import { FileText, Globe, Download, Eye } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { generatePageSEO } from "@/lib/seo";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -13,15 +14,25 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({
-    locale,
-    namespace: "hsCode",
-  });
+  const t = await getTranslations({ locale, namespace: "hsCode" });
 
-  return {
+  return generatePageSEO({
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+    path: "/hs-code",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "HS code",
+      "harmonized system code",
+      "customs classification",
+      "tariff codes",
+      "product classification",
+      "import export codes",
+      "customs tariff",
+    ],
+  });
 }
 
 export default async function HsCodePage({

@@ -8,6 +8,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+import { generatePageSEO } from "@/lib/seo";
+
 export async function generateMetadata({
   params,
 }: {
@@ -16,10 +18,22 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "complianceStandards" });
 
-  return {
+  return generatePageSEO({
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+    path: "/compliance-standards",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "trade compliance",
+      "compliance standards",
+      "import export regulations",
+      "trade certifications",
+      "regulatory compliance",
+      "quality standards",
+    ],
+  });
 }
 
 export default async function ComplianceStandardsPage({

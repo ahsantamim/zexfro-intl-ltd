@@ -15,11 +15,31 @@ import {
   Mail
 } from "lucide-react";
 
-export const metadata = {
-  title: "Privacy Policy - Zexfro | Data Protection & Privacy",
-  description:
-    "Learn how Zexfro protects your personal information and maintains your privacy. Our commitment to data security and transparency in international trade.",
-};
+import { generatePageSEO } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return generatePageSEO({
+    title: "Privacy Policy - Data Protection & Privacy",
+    description:
+      "Learn how Zexfro protects your personal information and maintains your privacy. Our commitment to data security and transparency in international trade.",
+    path: "/privacy-policy",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "privacy policy",
+      "data protection",
+      "personal information security",
+      "trade data privacy",
+      "GDPR compliance",
+    ],
+  });
+}
 
 export default function PrivacyPolicyPage() {
   return (

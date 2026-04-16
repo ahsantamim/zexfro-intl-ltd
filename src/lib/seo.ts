@@ -106,6 +106,103 @@ export function generateSEOMetadata({
   };
 }
 
+interface PageSEOProps {
+  title: string;
+  description: string;
+  path: string;
+  locale: string;
+  keywords?: string[];
+  image?: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  noIndex?: boolean;
+}
+
+export function generatePageSEO({
+  title,
+  description,
+  path,
+  locale,
+  keywords,
+  image,
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  noIndex = false,
+}: PageSEOProps): Metadata {
+  const metaTitle = `${title} | ${siteConfig.name}`;
+  const metaDescription = description;
+  const metaImage = image || siteConfig.ogImage;
+  const pagePath = path.startsWith("/") ? path : `/${path}`;
+  const canonicalUrl = `${siteConfig.url}/${locale}${pagePath}`;
+  const metaKeywords = keywords || siteConfig.keywords;
+
+  const localeMap: Record<string, string> = {
+    en: "en_US",
+    es: "es_ES",
+    fr: "fr_FR",
+    ar: "ar_SA",
+  };
+
+  return {
+    title: metaTitle,
+    description: metaDescription,
+    keywords: metaKeywords,
+    authors: [{ name: siteConfig.company.name }],
+    creator: siteConfig.name,
+    publisher: siteConfig.name,
+    robots: noIndex
+      ? { index: false, follow: false }
+      : {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+    metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        en: `${siteConfig.url}/en${pagePath}`,
+        es: `${siteConfig.url}/es${pagePath}`,
+        fr: `${siteConfig.url}/fr${pagePath}`,
+        ar: `${siteConfig.url}/ar${pagePath}`,
+        "x-default": `${siteConfig.url}/en${pagePath}`,
+      },
+    },
+    openGraph: {
+      type,
+      locale: localeMap[locale] || "en_US",
+      url: canonicalUrl,
+      title: metaTitle,
+      description: metaDescription,
+      siteName: siteConfig.name,
+      images: [
+        {
+          url: metaImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      ...(type === "article" && {
+        publishedTime,
+        modifiedTime,
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description: metaDescription,
+      images: [metaImage],
+      creator: "@zexfro",
+      site: "@zexfro",
+    },
+  };
+}
+
 // JSON-LD Schema for structured data
 export function generateOrganizationSchema() {
   return {

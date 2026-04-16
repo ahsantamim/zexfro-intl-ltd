@@ -2,11 +2,32 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
 import { MapSection } from "@/components/contact/MapSection";
+import { generatePageSEO } from "@/lib/seo";
 
-export const metadata = {
-  title: "Contact Us - Company Profile",
-  description: "Get in touch with our team",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return generatePageSEO({
+    title: "Contact Us - Get in Touch",
+    description:
+      "Contact Zexfro International Limited for import/export inquiries, trade partnership opportunities, or general questions. Reach us by phone, email, or visit our office in Dhaka.",
+    path: "/contact",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "contact Zexfro",
+      "trade inquiry",
+      "import export contact",
+      "business partnership",
+      "trade consultation",
+      "Zexfro office location",
+    ],
+  });
+}
 
 export default function ContactPage() {
   return (

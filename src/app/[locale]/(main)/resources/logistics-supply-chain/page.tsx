@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { generatePageSEO } from "@/lib/seo";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -26,13 +27,24 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "resources" });
 
-  return {
-    title: "Logistics & Supply Chain Resources | Zexfro",
+  return generatePageSEO({
+    title: "Logistics & Supply Chain Resources",
     description:
-      "Comprehensive resources for logistics and supply chain management, including guides, whitepapers, case studies, and industry insights.",
-  };
+      "Comprehensive resources for logistics and supply chain management, including guides, whitepapers, case studies, and industry insights for international trade.",
+    path: "/resources/logistics-supply-chain",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "logistics resources",
+      "supply chain guides",
+      "trade whitepapers",
+      "logistics case studies",
+      "industry insights",
+      "supply chain best practices",
+    ],
+  });
 }
 
 const sections = [

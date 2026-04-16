@@ -54,7 +54,6 @@ export default async function LocaleLayout({ children, params }: Props) {
         <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
         <link rel="manifest" href="/favicon/site.webmanifest" />
-        <link rel="canonical" href={`${siteConfig.url}/${locale}`} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

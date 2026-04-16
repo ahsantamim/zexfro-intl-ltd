@@ -2,11 +2,32 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { BlogGrid } from "@/components/blog/BlogGrid";
 import { BlogCategories } from "@/components/blog/BlogCategories";
 import { BlogSearch } from "@/components/blog/BlogSearch";
+import { generatePageSEO } from "@/lib/seo";
 
-export const metadata = {
-  title: "Blog - Company Profile",
-  description: "Read our latest articles and insights",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return generatePageSEO({
+    title: "Blog - Trade Insights & Industry News",
+    description:
+      "Stay informed with Zexfro's latest articles on international trade, import/export best practices, logistics insights, compliance updates, and global market trends.",
+    path: "/blog",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "trade blog",
+      "import export insights",
+      "international trade news",
+      "logistics articles",
+      "global trade trends",
+      "trade compliance updates",
+    ],
+  });
+}
 
 export default function BlogPage() {
   return (

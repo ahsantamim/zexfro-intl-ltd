@@ -15,6 +15,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+import { generatePageSEO } from "@/lib/seo";
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,10 +25,22 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "qualityAssurance" });
 
-  return {
+  return generatePageSEO({
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+    path: "/quality-assurance",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "quality assurance",
+      "product quality control",
+      "trade quality standards",
+      "inspection services",
+      "quality certification",
+      "product testing",
+    ],
+  });
 }
 
 export default async function QualityAssurancePage({

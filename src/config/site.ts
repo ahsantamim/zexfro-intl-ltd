@@ -26,5 +26,5 @@ export const siteConfig = {
     linkedin: "https://linkedin.com/company/zexfro",
     instagram: "https://instagram.com/zexfro",
   },
-  ogImage: "/og-image.png",
+  ogImage: "/home/hero.avif",
 };

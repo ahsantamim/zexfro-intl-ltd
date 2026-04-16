@@ -2,6 +2,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { generatePageSEO } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -14,10 +15,21 @@ export async function generateMetadata({
     namespace: "competitiveAdvantagesPage",
   });
 
-  return {
+  return generatePageSEO({
     title: t("pageTitle"),
     description: t("pageDescription"),
-  };
+    path: "/competitive-advantages",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "competitive advantages",
+      "trade partner benefits",
+      "why choose Zexfro",
+      "trade platform advantages",
+      "import export benefits",
+    ],
+  });
 }
 
 export default function CompetitiveAdvantagesPage() {

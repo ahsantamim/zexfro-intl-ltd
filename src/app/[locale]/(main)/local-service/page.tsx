@@ -1,18 +1,31 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { generatePageSEO } from "@/lib/seo";
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "localServicePage" });
 
-  return {
+  return generatePageSEO({
     title: t("pageTitle"),
     description: t("pageDescription"),
-  };
+    path: "/local-service",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "local trade services",
+      "domestic distribution",
+      "local sourcing",
+      "Bangladesh trade services",
+      "local logistics",
+    ],
+  });
 }
 
 export default function LocalServicePage() {

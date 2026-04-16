@@ -19,6 +19,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+import { generatePageSEO } from "@/lib/seo";
+
 export async function generateMetadata({
   params,
 }: {
@@ -30,10 +32,22 @@ export async function generateMetadata({
     namespace: "documentationCompliance",
   });
 
-  return {
+  return generatePageSEO({
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+    path: "/documentation-compliance",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "trade documentation",
+      "compliance documentation",
+      "import export documents",
+      "customs documentation",
+      "trade compliance",
+      "shipping documents",
+    ],
+  });
 }
 
 export default async function DocumentationCompliancePage({

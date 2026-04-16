@@ -17,6 +17,7 @@ import {
 import { RegisterModal } from "@/components/home/RegisterModal";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { generatePageSEO } from "@/lib/seo";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -28,15 +29,23 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({
-    locale,
-    namespace: "termsConditions",
-  });
+  const t = await getTranslations({ locale, namespace: "termsConditions" });
 
-  return {
+  return generatePageSEO({
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+    path: "/terms-conditions",
+    locale,
+    image:
+      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=630&fit=crop&q=80",
+    keywords: [
+      "terms and conditions",
+      "trade terms",
+      "service agreement",
+      "user agreement",
+      "trade platform terms",
+    ],
+  });
 }
 
 export default async function TermsConditionsPage({
