@@ -7,6 +7,7 @@ export const SUPABASE_S3_CONFIG = {
   buckets: {
     products: 'product-images',
     blog: 'blog-images',
+    categories: 'category-images',
   },
 };
 

@@ -8,17 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit, Trash2, Loader2, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import DOMPurify from "isomorphic-dompurify";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 
 interface Category {
   id: string;
@@ -45,6 +36,7 @@ export default function ViewCategoryPage() {
 
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [category, setCategory] = useState<Category | null>(null);
   const [coverImage, setCoverImage] = useState<string>("");
 
@@ -162,42 +154,23 @@ export default function ViewCategoryPage() {
               Edit
             </Button>
           </Link>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" disabled={deleting}>
-                {deleting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
-                  </>
-                )}
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  category &quot;{category.name}&quot; and remove its data from
-                  the database.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDelete}
-                  className="bg-red-600 hover:bg-red-700"
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <Button
+            variant="destructive"
+            disabled={deleting}
+            onClick={() => setDeleteDialogOpen(true)}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete
+          </Button>
+          <DeleteConfirmDialog
+            open={deleteDialogOpen}
+            onOpenChange={setDeleteDialogOpen}
+            title="Delete category?"
+            itemName={category.name}
+            description={`This will permanently delete "${category.name}" and may affect linked products.`}
+            onConfirm={handleDelete}
+            isLoading={deleting}
+          />
         </div>
       </div>
 
@@ -299,9 +272,12 @@ export default function ViewCategoryPage() {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             Description
           </h2>
-          <p className="text-gray-700 whitespace-pre-wrap">
-            {category.description}
-          </p>
+          <div
+            className="blog-content prose max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(category.description),
+            }}
+          />
         </Card>
       )}
     </div>

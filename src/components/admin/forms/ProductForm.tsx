@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { RichTextEditor } from "./RichTextEditor";
 import { ImageUploader } from "./ImageUploader";
+import { AdminFormActions } from "./AdminFormActions";
 
 interface Category {
   id: string;
@@ -168,6 +167,20 @@ export function ProductForm({ product }: ProductFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (formData.images.length === 0) {
+      alert("Please upload at least one product image.");
+      return;
+    }
+
+    const strippedLong = formData.long_description
+      .replace(/<[^>]*>/g, "")
+      .trim();
+    if (!strippedLong) {
+      alert("Long description is required.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -245,21 +258,11 @@ export function ProductForm({ product }: ProductFormProps) {
   };
 
   return (
-    <Card className="p-8 bg-white">
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Page Title */}
-        <div className="border-b pb-6">
-          <h1 className="text-3xl font-bold text-gray-900">
-            {product?.id ? "Edit Product" : "Create New Product"}
-          </h1>
-          <p className="text-gray-500 mt-2">
-            {product?.id
-              ? "Update product details"
-              : "Fill in the product details below"}
-          </p>
-        </div>
-
-        {/* Section 1: Basic Information - 2 Columns */}
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-lg shadow p-8 space-y-8"
+    >
+        {/* Section 1: Basic Information */}
         <div className="space-y-6">
           <h2 className="text-xl font-semibold text-gray-900">
             Basic Information
@@ -435,12 +438,13 @@ export function ProductForm({ product }: ProductFormProps) {
             Product Images
           </h2>
           <ImageUploader
-            label=""
+            label="Upload product images"
             value={formData.images}
             onChange={(images) => setFormData({ ...formData, images })}
             bucket="products"
             maxFiles={5}
-            required={true}
+            required
+            aspectRatio="square"
           />
         </div>
 
@@ -472,14 +476,15 @@ export function ProductForm({ product }: ProductFormProps) {
           {/* Long Description */}
           <div className="space-y-2">
             <RichTextEditor
-              label="Long Description (Rich Text)"
+              label="Long Description"
               value={formData.long_description}
               onChange={(value) =>
                 setFormData({ ...formData, long_description: value })
               }
-              placeholder="Detailed product description with formatting"
+              placeholder="Detailed product description with formatting, images, and lists"
               required
-              height="350px"
+              height="400px"
+              uploadBucket="products"
             />
             <p className="text-xs text-gray-500">
               Add detailed product features, specifications, and benefits
@@ -487,27 +492,12 @@ export function ProductForm({ product }: ProductFormProps) {
           </div>
         </div>
 
-        {/* Form Actions */}
-        <div className="flex justify-end gap-3 pt-6 border-t">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-            className="px-6"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={loading} className="px-6">
-            {loading
-              ? product?.id
-                ? "Updating..."
-                : "Creating..."
-              : product?.id
-              ? "Update Product"
-              : "Create Product"}
-          </Button>
-        </div>
-      </form>
-    </Card>
+        <AdminFormActions
+          onCancel={() => router.back()}
+          isSubmitting={loading}
+          submitLabel={product?.id ? "Update Product" : "Create Product"}
+          submittingLabel={product?.id ? "Updating..." : "Creating..."}
+        />
+    </form>
   );
 }

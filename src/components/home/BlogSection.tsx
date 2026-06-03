@@ -57,12 +57,13 @@ export function BlogSection({ posts }: BlogSectionProps) {
               className="group bg-white border border-gray-200 hover:border-[#0A4D96] transition-all duration-300 overflow-hidden"
             >
               {/* Image */}
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative aspect-video bg-gray-100 overflow-hidden">
                 <Image
                   src={post.coverImage || defaultImage}
                   alt={post.title}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-contain group-hover:scale-[1.02] transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, 25vw"
                 />
                 <div className="absolute top-3 left-3">
                   <span className="bg-[#0A4D96] text-white text-xs font-semibold px-3 py-1 rounded-none">

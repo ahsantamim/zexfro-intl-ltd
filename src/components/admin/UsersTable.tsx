@@ -22,6 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TableSkeleton } from "./loading";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 import { useRouter } from "next/navigation";
 import type { User } from "@/lib/supabase/users.service";
 
@@ -39,6 +41,7 @@ export function UsersTable({ loading: initialLoading = false }: UsersTableProps)
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const deleteConfirm = useDeleteConfirm();
 
   // Fetch users
   useEffect(() => {
@@ -71,26 +74,17 @@ export function UsersTable({ loading: initialLoading = false }: UsersTableProps)
     fetchUsers();
   }, [page, limit, search, roleFilter]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) return;
+  const performDelete = async (id: string) => {
+    const response = await fetch(`/api/admin/users/${id}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
 
-    try {
-      const response = await fetch(`/api/admin/users/${id}`, {
-        method: 'DELETE',
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Refresh the list
-        setUsers(users.filter(u => u.id !== id));
-        alert('User deleted successfully');
-      } else {
-        alert('Failed to delete user: ' + data.error);
-      }
-    } catch (error) {
-      console.error('Failed to delete user:', error);
-      alert('Failed to delete user');
+    if (data.success) {
+      setUsers((prev) => prev.filter((u) => u.id !== id));
+    } else {
+      alert("Failed to delete user: " + data.error);
+      throw new Error(data.error);
     }
   };
 
@@ -226,7 +220,13 @@ export function UsersTable({ loading: initialLoading = false }: UsersTableProps)
                           variant="ghost"
                           size="sm"
                           className="hover:bg-red-50 hover:text-red-600"
-                          onClick={() => handleDelete(user.id)}
+                          onClick={() =>
+                            deleteConfirm.requestDelete({
+                              id: user.id,
+                              name: user.email,
+                              onConfirm: performDelete,
+                            })
+                          }
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -273,6 +273,20 @@ export function UsersTable({ loading: initialLoading = false }: UsersTableProps)
           </div>
         </Card>
       )}
+
+      <DeleteConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={deleteConfirm.handleOpenChange}
+        title="Delete user?"
+        itemName={deleteConfirm.target?.name}
+        description={
+          deleteConfirm.target
+            ? `This will permanently remove the user account for "${deleteConfirm.target.name}".`
+            : undefined
+        }
+        onConfirm={deleteConfirm.handleConfirm}
+        isLoading={deleteConfirm.isLoading}
+      />
     </div>
   );
 }

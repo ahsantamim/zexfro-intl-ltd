@@ -22,6 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TableSkeleton } from "./loading";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/lib/supabase/products.service";
 
@@ -41,6 +43,7 @@ export function ProductsTable({ loading: initialLoading = false }: ProductsTable
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
+  const deleteConfirm = useDeleteConfirm();
 
   // Fetch categories
   useEffect(() => {
@@ -90,26 +93,17 @@ export function ProductsTable({ loading: initialLoading = false }: ProductsTable
     fetchProducts();
   }, [page, limit, search, statusFilter, categoryFilter]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+  const performDelete = async (id: string) => {
+    const response = await fetch(`/api/admin/products/${id}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
 
-    try {
-      const response = await fetch(`/api/admin/products/${id}`, {
-        method: 'DELETE',
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Refresh the list
-        setProducts(products.filter(p => p.id !== id));
-        alert('Product deleted successfully');
-      } else {
-        alert('Failed to delete product: ' + data.error);
-      }
-    } catch (error) {
-      console.error('Failed to delete product:', error);
-      alert('Failed to delete product');
+    if (data.success) {
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+    } else {
+      alert("Failed to delete product: " + data.error);
+      throw new Error(data.error);
     }
   };
 
@@ -267,7 +261,13 @@ export function ProductsTable({ loading: initialLoading = false }: ProductsTable
                           variant="ghost"
                           size="sm"
                           className="hover:bg-red-50 hover:text-red-600"
-                          onClick={() => handleDelete(product.id)}
+                          onClick={() =>
+                            deleteConfirm.requestDelete({
+                              id: product.id,
+                              name: product.name,
+                              onConfirm: performDelete,
+                            })
+                          }
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -314,6 +314,20 @@ export function ProductsTable({ loading: initialLoading = false }: ProductsTable
           </div>
         </Card>
       )}
+
+      <DeleteConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={deleteConfirm.handleOpenChange}
+        title="Delete product?"
+        itemName={deleteConfirm.target?.name}
+        description={
+          deleteConfirm.target
+            ? `This will permanently delete "${deleteConfirm.target.name}" and all associated images and data.`
+            : undefined
+        }
+        onConfirm={deleteConfirm.handleConfirm}
+        isLoading={deleteConfirm.isLoading}
+      />
     </div>
   );
 }

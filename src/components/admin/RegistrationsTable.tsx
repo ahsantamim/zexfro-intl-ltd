@@ -26,16 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import {
   Table,
   TableBody,
@@ -76,9 +67,10 @@ export function RegistrationsTable({
   const [updating, setUpdating] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [registrationToDelete, setRegistrationToDelete] = useState<
-    string | null
-  >(null);
+  const [registrationToDelete, setRegistrationToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchRegistrations();
@@ -152,8 +144,8 @@ export function RegistrationsTable({
     }
   };
 
-  const confirmDelete = (id: string) => {
-    setRegistrationToDelete(id);
+  const confirmDelete = (reg: Registration) => {
+    setRegistrationToDelete({ id: reg.id, name: reg.name });
     setDeleteDialogOpen(true);
   };
 
@@ -325,7 +317,7 @@ export function RegistrationsTable({
                           variant="ghost"
                           size="sm"
                           className="hover:bg-red-50 hover:text-red-600"
-                          onClick={() => confirmDelete(reg.id)}
+                          onClick={() => confirmDelete(reg)}
                           disabled={deleting === reg.id}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -660,29 +652,23 @@ export function RegistrationsTable({
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this
-              registration from the database.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() =>
-                registrationToDelete && handleDelete(registrationToDelete)
-              }
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete registration?"
+        itemName={registrationToDelete?.name}
+        description={
+          registrationToDelete
+            ? `This will permanently delete the registration for "${registrationToDelete.name}" and all related data.`
+            : undefined
+        }
+        onConfirm={async () => {
+          if (registrationToDelete) {
+            await handleDelete(registrationToDelete.id);
+          }
+        }}
+        isLoading={deleting !== null}
+      />
     </>
   );
 }

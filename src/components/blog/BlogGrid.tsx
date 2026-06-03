@@ -74,13 +74,14 @@ export function BlogGrid() {
         <Link href={`/blog/${post.slug}`} key={post.id} className="group block">
           <article className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
             {/* Cover Image */}
-            <div className="relative h-56 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+            <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
               {post.coverImage ? (
                 <Image
                   src={post.coverImage}
                   alt={post.title}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="object-contain group-hover:scale-[1.02] transition-transform duration-300"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               ) : (
                 <div className="flex items-center justify-center h-full">

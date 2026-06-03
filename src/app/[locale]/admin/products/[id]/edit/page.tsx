@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { ProductForm } from "@/components/admin/forms/ProductForm";
-import { Loader2 } from "lucide-react";
+import { PageLoader } from "@/components/ui/LoadingSpinner";
 
 export default function EditProductPage() {
   const params = useParams();
@@ -32,22 +32,16 @@ export default function EditProductPage() {
   }, [params.id]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!product) {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Product Not Found
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">Product Not Found</h1>
           <p className="text-gray-600 mt-2">
-            The product you're looking for doesn't exist.
+            The product you are looking for does not exist.
           </p>
         </div>
       </div>
@@ -56,6 +50,10 @@ export default function EditProductPage() {
 
   return (
     <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
+        <p className="text-gray-600 mt-2">Update product details and images</p>
+      </div>
       <ProductForm product={product} />
     </div>
   );

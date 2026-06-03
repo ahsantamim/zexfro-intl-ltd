@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { BlogPost } from "@/components/blog/BlogPost";
-import { BlogComments } from "@/components/blog/BlogComments";
-import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { RecommendedPosts } from "@/components/blog/RecommendedPosts";
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/api/blog";
 import { generatePageSEO } from "@/lib/seo";
 
@@ -56,8 +55,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <main className="min-h-screen">
       <BlogPost post={post} />
-      <RelatedPosts currentPostId={post.id} category={post.category} />
-      <BlogComments postId={post.id} />
+      <RecommendedPosts
+        currentPostId={post.id}
+        currentTitle={post.title}
+        category={post.category}
+      />
     </main>
   );
 }

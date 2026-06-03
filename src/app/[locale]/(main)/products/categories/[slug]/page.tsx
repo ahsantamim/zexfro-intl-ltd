@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import DOMPurify from "isomorphic-dompurify";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProductsGrid } from "@/components/products/ProductsGrid";
 import { ArrowLeft, Package, Loader2 } from "lucide-react";
@@ -168,11 +169,12 @@ export default function CategoryPage() {
                     )}
                   </div>
                 </div>
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {category.description}
-                  </p>
-                </div>
+                <div
+                  className="blog-content prose prose-lg max-w-none text-gray-700"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(category.description),
+                  }}
+                />
               </div>
             </div>
           </div>

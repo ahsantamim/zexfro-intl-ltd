@@ -31,6 +31,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TableSkeleton } from "./loading";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 import { useRouter } from "next/navigation";
 import type { Category } from "@/lib/supabase/categories.service";
 
@@ -53,6 +55,7 @@ export function CategoriesTable({
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const deleteConfirm = useDeleteConfirm();
 
   // Fetch categories
   useEffect(() => {
@@ -105,25 +108,17 @@ export function CategoriesTable({
     fetchCategories();
   }, [page, limit, search, statusFilter]);
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+  const performDelete = async (id: string) => {
+    const response = await fetch(`/api/admin/categories/${id}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
 
-    try {
-      const response = await fetch(`/api/admin/categories/${id}`, {
-        method: "DELETE",
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setCategories(categories.filter((c) => c.id !== id));
-        alert("Category deleted successfully");
-      } else {
-        alert("Failed to delete category: " + data.error);
-      }
-    } catch (error) {
-      console.error("Failed to delete category:", error);
-      alert("Failed to delete category");
+    if (data.success) {
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+    } else {
+      alert("Failed to delete category: " + data.error);
+      throw new Error(data.error);
     }
   };
 
@@ -242,7 +237,7 @@ export function CategoriesTable({
                         <div className="font-semibold">{category.name}</div>
                         {category.description && (
                           <div className="text-sm text-gray-500 truncate max-w-xs">
-                            {category.description}
+                            {category.description.replace(/<[^>]*>/g, "")}
                           </div>
                         )}
                       </div>
@@ -312,7 +307,11 @@ export function CategoriesTable({
                           size="sm"
                           className="hover:bg-red-50 hover:text-red-600"
                           onClick={() =>
-                            handleDelete(category.id, category.name)
+                            deleteConfirm.requestDelete({
+                              id: category.id,
+                              name: category.name,
+                              onConfirm: performDelete,
+                            })
                           }
                         >
                           <Trash2 className="w-4 h-4" />
@@ -361,6 +360,20 @@ export function CategoriesTable({
           </div>
         </Card>
       )}
+
+      <DeleteConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={deleteConfirm.handleOpenChange}
+        title="Delete category?"
+        itemName={deleteConfirm.target?.name}
+        description={
+          deleteConfirm.target
+            ? `This will permanently delete the category "${deleteConfirm.target.name}" and may affect linked products.`
+            : undefined
+        }
+        onConfirm={deleteConfirm.handleConfirm}
+        isLoading={deleteConfirm.isLoading}
+      />
     </div>
   );
 }

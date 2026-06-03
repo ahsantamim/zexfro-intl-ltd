@@ -22,6 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TableSkeleton } from "./loading";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 import { useRouter } from "next/navigation";
 import type { TradeType } from "@/lib/supabase/trade-types.service";
 
@@ -39,6 +41,7 @@ export function TradeTypesTable({ loading: initialLoading = false }: TradeTypesT
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const deleteConfirm = useDeleteConfirm();
 
   // Fetch trade types
   useEffect(() => {
@@ -71,25 +74,17 @@ export function TradeTypesTable({ loading: initialLoading = false }: TradeTypesT
     fetchTradeTypes();
   }, [page, limit, search, statusFilter]);
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+  const performDelete = async (id: string) => {
+    const response = await fetch(`/api/admin/trade-types/${id}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
 
-    try {
-      const response = await fetch(`/api/admin/trade-types/${id}`, {
-        method: 'DELETE',
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setTradeTypes(tradeTypes.filter(tt => tt.id !== id));
-        alert('Trade type deleted successfully');
-      } else {
-        alert('Failed to delete trade type: ' + data.error);
-      }
-    } catch (error) {
-      console.error('Failed to delete trade type:', error);
-      alert('Failed to delete trade type');
+    if (data.success) {
+      setTradeTypes((prev) => prev.filter((tt) => tt.id !== id));
+    } else {
+      alert("Failed to delete trade type: " + data.error);
+      throw new Error(data.error);
     }
   };
 
@@ -225,7 +220,13 @@ export function TradeTypesTable({ loading: initialLoading = false }: TradeTypesT
                           variant="ghost"
                           size="sm"
                           className="hover:bg-red-50 hover:text-red-600"
-                          onClick={() => handleDelete(tradeType.id, tradeType.name)}
+                          onClick={() =>
+                            deleteConfirm.requestDelete({
+                              id: tradeType.id,
+                              name: tradeType.name,
+                              onConfirm: performDelete,
+                            })
+                          }
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -272,6 +273,15 @@ export function TradeTypesTable({ loading: initialLoading = false }: TradeTypesT
           </div>
         </Card>
       )}
+
+      <DeleteConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={deleteConfirm.handleOpenChange}
+        title="Delete trade type?"
+        itemName={deleteConfirm.target?.name}
+        onConfirm={deleteConfirm.handleConfirm}
+        isLoading={deleteConfirm.isLoading}
+      />
     </div>
   );
 }

@@ -329,7 +329,7 @@ export default function ProductPage() {
               Product Description
             </h2>
             <div
-              className="prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed overflow-x-auto break-words"
+              className="blog-content prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed overflow-x-auto break-words"
               dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
               style={{
                 wordWrap: "break-word",

@@ -122,7 +122,7 @@ export function ProductsGrid({
           <Link
             key={product.id}
             href={`/products/${product.slug}`}
-            className="group relative overflow-hidden rounded-none aspect-[4/3] hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
+            className="group relative overflow-hidden rounded-none aspect-[4/3] bg-gray-100 hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
             style={{
               animationDelay: `${index * 50}ms`,
               animationFillMode: "backwards",
@@ -133,7 +133,8 @@ export function ProductsGrid({
               src={imageUrl}
               alt={primaryImage?.alt_text || product.name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 400px"
             />
 
             {/* Gradient Overlay */}

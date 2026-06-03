@@ -6,15 +6,34 @@ import { Label } from "@/components/ui/label";
 import { X, Upload, Loader2 } from "lucide-react";
 import { uploadMultipleToSupabase } from "@/lib/supabase/storage";
 import { SUPABASE_S3_CONFIG } from "@/lib/supabase/storage";
+import { validateUploadFile } from "@/config/storage";
+
+type AspectRatioPreset = "square" | "landscape" | "portrait";
+
+const ASPECT_HINTS: Record<
+  AspectRatioPreset,
+  { ratio: string; dimensions: string }
+> = {
+  square: { ratio: "1:1", dimensions: "800×800px" },
+  landscape: { ratio: "16:9", dimensions: "1200×675px" },
+  portrait: { ratio: "3:4", dimensions: "600×800px" },
+};
+
+const ASPECT_CLASSES: Record<AspectRatioPreset, string> = {
+  square: "aspect-square",
+  landscape: "aspect-video",
+  portrait: "aspect-[3/4]",
+};
 
 interface ImageUploaderProps {
   label?: string;
   value: string[];
   onChange: (urls: string[]) => void;
-  bucket?: "products" | "blog";
+  bucket?: "products" | "blog" | "categories";
   maxFiles?: number;
   required?: boolean;
   accept?: string;
+  aspectRatio?: AspectRatioPreset;
 }
 
 export function ImageUploader({
@@ -25,10 +44,14 @@ export function ImageUploader({
   maxFiles = 5,
   required = false,
   accept = "image/*",
+  aspectRatio = "square",
 }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const aspectHint = ASPECT_HINTS[aspectRatio];
+  const aspectClass = ASPECT_CLASSES[aspectRatio];
 
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -36,17 +59,24 @@ export function ImageUploader({
     const files = event.target.files;
     if (!files) return;
 
-    // Check max files
     if (value.length + files.length > maxFiles) {
       setError(`Maximum ${maxFiles} images allowed`);
       return;
+    }
+
+    const filesArray = Array.from(files);
+    for (const file of filesArray) {
+      const validation = validateUploadFile(file);
+      if (!validation.valid) {
+        setError(validation.error ?? "Invalid file");
+        return;
+      }
     }
 
     setError(null);
     setUploading(true);
 
     try {
-      const filesArray = Array.from(files);
       const bucketName = SUPABASE_S3_CONFIG.buckets[bucket];
 
       const results = await uploadMultipleToSupabase(
@@ -55,12 +85,10 @@ export function ImageUploader({
         `${bucket}/${Date.now()}`
       );
 
-      // Filter out errors and add successful uploads
       const successfulUrls = results
         .filter((result) => !result.error && result.url)
         .map((result) => result.url);
 
-      // Check for any errors
       const errors = results.filter((result) => result.error);
       if (errors.length > 0) {
         setError(
@@ -99,7 +127,6 @@ export function ImageUploader({
         </Label>
       )}
 
-      {/* Upload Area */}
       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition">
         <input
           ref={fileInputRef}
@@ -133,19 +160,20 @@ export function ImageUploader({
                   ? `${remainingSlots} slot${remainingSlots !== 1 ? "s" : ""} remaining`
                   : "Maximum images reached"}
               </span>
+              <span className="text-xs text-gray-400">
+                Recommended {aspectHint.dimensions} ({aspectHint.ratio})
+              </span>
             </div>
           )}
         </button>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
           {error}
         </div>
       )}
 
-      {/* Image Preview Grid */}
       {value.length > 0 && (
         <div>
           <h4 className="text-sm font-medium mb-3">
@@ -154,11 +182,13 @@ export function ImageUploader({
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {value.map((url) => (
               <div key={url} className="relative group">
-                <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                <div
+                  className={`${aspectClass} rounded-lg overflow-hidden bg-gray-100 border border-gray-200`}
+                >
                   <img
                     src={url}
                     alt="Uploaded"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
                 <button
@@ -175,9 +205,9 @@ export function ImageUploader({
         </div>
       )}
 
-      {/* Info Text */}
       <p className="text-xs text-gray-500">
-        Supported formats: JPEG, PNG, WebP, GIF. Max 5 images.
+        Supported formats: JPEG, PNG, WebP, GIF. First image is used as the
+        primary display image.
       </p>
     </div>
   );
