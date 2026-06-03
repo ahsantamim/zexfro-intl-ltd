@@ -90,7 +90,7 @@ export function Footer() {
               {/* Social Icons */}
               <div className="flex gap-4 justify-center mt-6">
                 <a
-                  href="https://www.facebook.com/profile.php?id=61575348645915&rdid=ZGkWTYmU4lIrbage#"
+                  href="https://www.facebook.com/profile.php?id=61590514021032&rdid=qtORKShqp30eZfW7&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F18hcFtAm8P%2F#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white bg-blue-600 p-2 rounded-full hover:opacity-80 transition-opacity"
