@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import DOMPurify from "isomorphic-dompurify";
+import { SanitizedHtml } from "@/components/ui/SanitizedHtml";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProductsGrid } from "@/components/products/ProductsGrid";
 import { ArrowLeft, Package, Loader2 } from "lucide-react";
@@ -169,11 +169,9 @@ export default function CategoryPage() {
                     )}
                   </div>
                 </div>
-                <div
+                <SanitizedHtml
+                  html={category.description}
                   className="blog-content prose prose-lg max-w-none text-gray-700"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(category.description),
-                  }}
                 />
               </div>
             </div>

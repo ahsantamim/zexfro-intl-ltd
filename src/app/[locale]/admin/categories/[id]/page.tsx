@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit, Trash2, Loader2, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import DOMPurify from "isomorphic-dompurify";
+import { SanitizedHtml } from "@/components/ui/SanitizedHtml";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 
 interface Category {
@@ -272,11 +272,9 @@ export default function ViewCategoryPage() {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             Description
           </h2>
-          <div
+          <SanitizedHtml
+            html={category.description}
             className="blog-content prose max-w-none text-gray-700"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(category.description),
-            }}
           />
         </Card>
       )}

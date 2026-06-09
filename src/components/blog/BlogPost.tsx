@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Calendar, User } from "lucide-react";
-import DOMPurify from "isomorphic-dompurify";
 import { BlogPost as BlogPostType } from "@/lib/api/blog";
-import { formatBlogContentImages } from "@/lib/blog/formatBlogContent";
+import { SanitizedHtml } from "@/components/ui/SanitizedHtml";
 import { BlogMediaFrame } from "./BlogMediaFrame";
 import "@/styles/blog-post.css";
 
@@ -11,9 +10,6 @@ interface BlogPostProps {
 }
 
 export function BlogPost({ post }: BlogPostProps) {
-  const sanitizedContent = DOMPurify.sanitize(post.content || "");
-  const formattedContent = formatBlogContentImages(sanitizedContent);
-
   const publishedDate = new Date(
     post.publishedAt || post.createdAt
   ).toLocaleDateString("en-US", {
@@ -86,9 +82,10 @@ export function BlogPost({ post }: BlogPostProps) {
       {/* Article content */}
       <div className="border-t border-gray-100 bg-[var(--blog-surface)]/40">
         <div className="container mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
-          <div
+          <SanitizedHtml
+            html={post.content || ""}
             className="blog-article-body"
-            dangerouslySetInnerHTML={{ __html: formattedContent }}
+            formatImages
           />
         </div>
       </div>

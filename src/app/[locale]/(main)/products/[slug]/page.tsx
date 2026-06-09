@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import DOMPurify from "isomorphic-dompurify";
+import { SanitizedHtml } from "@/components/ui/SanitizedHtml";
 import { ChevronLeft, Share2, Heart } from "lucide-react";
 
 interface ProductImage {
@@ -125,8 +125,6 @@ export default function ProductPage() {
       </div>
     );
   }
-
-  const sanitizedHtml = DOMPurify.sanitize(product.long_description || "");
 
   return (
     <main className="min-h-screen bg-white pt-16 md:pt-20 overflow-x-hidden">
@@ -328,14 +326,9 @@ export default function ProductPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
               Product Description
             </h2>
-            <div
+            <SanitizedHtml
+              html={product.long_description}
               className="blog-content prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed overflow-x-auto break-words"
-              dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-              style={{
-                wordWrap: "break-word",
-                overflowWrap: "break-word",
-                hyphens: "auto",
-              }}
             />
             <style jsx>{`
               div :global(img) {

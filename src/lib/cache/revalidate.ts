@@ -30,6 +30,8 @@ export async function revalidateAfterProductChange() {
 export async function revalidateAfterBlogChange() {
   revalidatePath("/[locale]/admin", "page");
   revalidatePath("/[locale]/admin/blog", "page");
+  revalidatePath("/[locale]/blog", "page");
+  revalidatePath("/[locale]/blog/[slug]", "page");
 }
 
 /**

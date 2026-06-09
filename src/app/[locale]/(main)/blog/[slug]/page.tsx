@@ -1,19 +1,14 @@
 import { notFound } from "next/navigation";
 import { BlogPost } from "@/components/blog/BlogPost";
 import { RecommendedPosts } from "@/components/blog/RecommendedPosts";
-import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/api/blog";
+import { getBlogPostBySlug } from "@/lib/api/blog";
 import { generatePageSEO } from "@/lib/seo";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string; locale: string }>;
 }
 
-export async function generateStaticParams() {
-  const posts = await getAllBlogPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const { slug, locale } = await params;
